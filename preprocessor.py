@@ -5,7 +5,7 @@ class Preprocessor():
         self.sentences = []
         ls_word = []
         ls_tags = []
-        fl = open(filename,"r")
+        fl = open(filename,"r",encoding="utf8")
         
         for line in fl:
             words = line.split()
