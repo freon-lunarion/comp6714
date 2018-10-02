@@ -26,6 +26,11 @@ class Preprocessor():
                 max_length = len(item[0])
             
         self.max_length = max_length
+
+        for item in self.batch:
+            while (len(item[0]) <  self.max_length):
+                item[0].append('<PAD>')
+                item[1].append('O')
     
 
 
