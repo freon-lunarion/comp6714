@@ -5,12 +5,12 @@ class Preprocessor():
         self.sentences = []
         ls_word = []
         ls_tags = []
-        fl = open(filename,"r")
+        fl = open(filename,"r", encoding = "utf8")
         
         for line in fl:
             words = line.split()
             if (not words):
-                self.sentences.append((ls_word.copy(),ls_tags.copy()))
+                self.sentences.append([ls_word.copy(),ls_tags.copy()])
                 ls_word.clear()
                 ls_tags.clear()
                 continue

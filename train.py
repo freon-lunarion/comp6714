@@ -36,6 +36,11 @@ for sentence, tags in train.batch:
 
 tag_to_ix = {"B-TAR": 0, "B-HYP": 0,"I-TAR": 1,"I-HYP": 1, "O": 2, START_TAG: 3, STOP_TAG: 4}
 
+#Checking the result
+print("This is train result = \n", train.batch)
+print("\n\n\nThis is word to ix = \n", word_to_ix)
+
+"""
 model = BiLSTM_CRF(len(word_to_ix), tag_to_ix, EMBEDDING_DIM, HIDDEN_DIM)
 optimizer = optim.SGD(model.parameters(), lr=0.01, weight_decay=1e-4)
 
@@ -70,4 +75,4 @@ for epoch in range(
 with torch.no_grad():
     precheck_sent = prepare_sequence(train.batch[0][0], word_to_ix)
     print(model(precheck_sent))
-# We got it!
+# We got it!"""
