@@ -36,10 +36,10 @@ class Preprocessor():
 
             for idx in range(length):
 
-                if i[idx] in text:
-                    i[idx] = text[i[idx]]
+                if i[0][idx] in text:
+                    i[0][idx] = text[i[0][idx]]
                 else:
-                    i[idx] = text["<UNK_WORD>"]
+                    i[0][idx] = text["<UNK_WORD>"]
 
         return input_data
     
