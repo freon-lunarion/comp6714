@@ -10,8 +10,7 @@ from preprocessor import Preprocessor
 
 torch.manual_seed(1)
 
-START_TAG = "<START>"
-STOP_TAG = "<STOP>"
+
 EMBEDDING_DIM = 5
 HIDDEN_DIM = 4
 
@@ -34,7 +33,7 @@ for sentence, tags in train.batch:
         if word not in word_to_ix:
             word_to_ix[word] = len(word_to_ix)
 
-tag_to_ix = {"B-TAR": 0, "B-HYP": 0,"I-TAR": 1,"I-HYP": 1, "O": 2, START_TAG: 3, STOP_TAG: 4}
+tag_to_ix = {"B-TAR": 0, "B-HYP": 1,"I-TAR": 2,"I-HYP": 3, "O": 4}
 
 #Checking the result
 print("This is train result = \n", train.batch)
