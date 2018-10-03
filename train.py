@@ -25,11 +25,12 @@ HIDDEN_DIM = 4
 # )]
 
 train = Preprocessor("data/train.txt")
-train.generate_batch(0,2)
+embed_data = train.embed_input("data/word_embeddings.txt")
+batch_data = train.generate_batch(0,2)
 
 
 word_to_ix = {}
-for sentence, tags in train.batch:
+for sentence, tags in batch_data:
     for word in sentence:
         if word not in word_to_ix:
             word_to_ix[word] = len(word_to_ix)
@@ -37,8 +38,8 @@ for sentence, tags in train.batch:
 tag_to_ix = {"B-TAR": 0, "B-HYP": 0,"I-TAR": 1,"I-HYP": 1, "O": 2, START_TAG: 3, STOP_TAG: 4}
 
 #Checking the result
-print("This is train result = \n", train.batch)
-print("\n\n\nThis is word to ix = \n", word_to_ix)
+#print("This is train result = \n", train.batch)
+#print("\n\n\nThis is word to ix = \n", word_to_ix)
 
 """
 model = BiLSTM_CRF(len(word_to_ix), tag_to_ix, EMBEDDING_DIM, HIDDEN_DIM)

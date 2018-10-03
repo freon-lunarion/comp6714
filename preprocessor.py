@@ -16,7 +16,34 @@ class Preprocessor():
                 continue
             ls_word.append(words[0])
             ls_tags.append(words[1])
+    
+
+    def embed_input(embedd_path, input_data = self.sentences):
         
+        #change input_data into list of embedd
+        #this is the path supposed to be = "data/word_embeddings.txt"
+        with open(embedd_path, "r", encoding = "utf-8") as file:
+            text = dict()
+
+            for i in file:
+                temp = i.split()
+                text[temp[0]] = list(map(float,temp[1:]))
+
+        #input_data in forms of = [[list of words, list of tags]. [list of words, list of tags], ... ], type list(list(list(), list()))
+        for i in input_data:
+            
+            length = len(i[0])
+
+            for idx in range(length):
+
+                if i[idx] in text:
+                    i[idx] = text[i[idx]]
+                else:
+                    i[idx] = text["<UNK_WORD>"]
+
+        return input_data
+    
+
     def generate_batch(self,start,limit):
         end = start + limit
         self.batch = self.sentences[start:end].copy() 
@@ -31,6 +58,8 @@ class Preprocessor():
             while (len(item[0]) <  self.max_length):
                 item[0].append('<PAD>')
                 item[1].append('O')
+
+        return self.batch
     
 
 
