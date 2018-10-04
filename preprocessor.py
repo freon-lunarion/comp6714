@@ -1,16 +1,23 @@
 
 class Preprocessor():
+    sentences = list()
+    word_embed = dict()
+    batch = list()
+    embed_val = list()
+    word_to_ix = {}
 
-    def __init__(self, filename, embedd_path):
-        self.sentences = []
-        self.word_embed = []
+    def __init__(self, filename, embedd_path="data/word_embeddings.txt"):
+        
         ls_word = []
         ls_tags = []
 
         fl = open(embedd_path,"r", encoding = "utf8")
+        embed_dict = dict()
         for line in fl:
-            words = line.split()
-            self.word_embed.append(words[0])
+            temp = line.split()
+            embed_dict[temp[0]] = list(map(float,temp[1:]))
+        self.word_embed = embed_dict
+
 
         fl = open(filename,"r", encoding = "utf8")
         for line in fl:
@@ -23,20 +30,19 @@ class Preprocessor():
             
             ls_word.append(words[0])
             ls_tags.append(words[1])
-<<<<<<< HEAD
     
 
     def embed_input():
         
         #change input_data into list of embedd
         #this is the path supposed to be = "data/word_embeddings.txt"
-        test = "data/word_embeddings.txt"
-        with open(test, "r", encoding = "utf-8") as file:
-            text = dict()
+        # test = "data/word_embeddings.txt"
+        # with open(test, "r", encoding = "utf-8") as file:
+        #     text = dict()
 
-            for i in file:
-                temp = i.split()
-                text[temp[0]] = list(map(float,temp[1:]))
+        #     for i in file:
+        #         temp = i.split()
+        #         text[temp[0]] = list(map(float,temp[1:]))
 
         #input_data in forms of = [[list of words, list of tags]. [list of words, list of tags], ... ], type list(list(list(), list()))
         for i in self.sentences:
@@ -52,25 +58,38 @@ class Preprocessor():
 
         return self.sentences
     
-=======
->>>>>>> 38984aaf1eeacbba59b76e6dbca9065f24f9d040
 
-    def generate_batch(self,start,limit):
+    def generate_batch(self,start=0,limit=1):
         end = start + limit
-        self.batch = self.sentences[start:end].copy() 
+        batch = self.sentences[start:end].copy() 
         max_length = 0
-        for item in self.batch:
+        for item in batch:
             if (len(item[0]) > max_length) :
                 max_length = len(item[0])
             
         self.max_length = max_length
 
-        for item in self.batch:
-            while (len(item[0]) <  self.max_length):
+        #padding every sentence to have same length
+        for item in batch:
+            while (len(item[0]) < max_length):
                 item[0].append('<PAD>')
                 item[1].append('O')
+            
+            
+        for i in batch:
+            
+            length = len(i[0])
+            for idx in range(length):
 
+                if i[0][idx] in self.word_embed:
+                    i[0][idx] = self.word_embed[i[0][idx]]
+                else:
+                    i[0][idx] = self.word_embed["<UNK_WORD>"]
+        self.batch = batch
         return self.batch
+
+
+        
 
     def num_sentence(self):
         return len(self.sentences)
