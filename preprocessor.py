@@ -18,11 +18,12 @@ class Preprocessor():
             ls_tags.append(words[1])
     
 
-    def embed_input(embedd_path, input_data = self.sentences):
+    def embed_input():
         
         #change input_data into list of embedd
         #this is the path supposed to be = "data/word_embeddings.txt"
-        with open(embedd_path, "r", encoding = "utf-8") as file:
+        test = "data/word_embeddings.txt"
+        with open(test, "r", encoding = "utf-8") as file:
             text = dict()
 
             for i in file:
@@ -30,7 +31,7 @@ class Preprocessor():
                 text[temp[0]] = list(map(float,temp[1:]))
 
         #input_data in forms of = [[list of words, list of tags]. [list of words, list of tags], ... ], type list(list(list(), list()))
-        for i in input_data:
+        for i in self.sentences:
             
             length = len(i[0])
 
@@ -41,7 +42,7 @@ class Preprocessor():
                 else:
                     i[0][idx] = text["<UNK_WORD>"]
 
-        return input_data
+        return self.sentences
     
 
     def generate_batch(self,start,limit):

@@ -48,7 +48,7 @@ class BiLSTM(nn.Module):
 #model = BiLSTM()
 #loss_function = nn.CrossEntropyLoss()
 #optimizer = optim.Adam()
-
+"""
 #Iteration Loop (Epoch)
 epoch_num = 100
 for epoch in range(epoch_num):
@@ -83,3 +83,4 @@ with torch.no_grad():
     # 1 is the index of maximum value of row 2, etc.
     # Which is DET NOUN VERB DET NOUN, the correct sequence!
     print(tag_scores)
+"""
