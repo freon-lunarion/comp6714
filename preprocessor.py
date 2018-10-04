@@ -1,12 +1,18 @@
 
 class Preprocessor():
 
-    def __init__(self, filename):
+    def __init__(self, filename, embedd_path):
         self.sentences = []
+        self.word_embed = []
         ls_word = []
         ls_tags = []
+
+        fl = open(embedd_path,"r", encoding = "utf8")
+        for line in fl:
+            words = line.split()
+            self.word_embed.append(words[0])
+
         fl = open(filename,"r", encoding = "utf8")
-        
         for line in fl:
             words = line.split()
             if (not words):
@@ -14,35 +20,11 @@ class Preprocessor():
                 ls_word.clear()
                 ls_tags.clear()
                 continue
-            ls_word.append(words[0])
+            if (words[0] in self.word_embed):
+                ls_word.append(words[0])
+            else :
+                ls_word.append('<UNK_WORD>')
             ls_tags.append(words[1])
-    
-
-    def embed_input(embedd_path, input_data = self.sentences):
-        
-        #change input_data into list of embedd
-        #this is the path supposed to be = "data/word_embeddings.txt"
-        with open(embedd_path, "r", encoding = "utf-8") as file:
-            text = dict()
-
-            for i in file:
-                temp = i.split()
-                text[temp[0]] = list(map(float,temp[1:]))
-
-        #input_data in forms of = [[list of words, list of tags]. [list of words, list of tags], ... ], type list(list(list(), list()))
-        for i in input_data:
-            
-            length = len(i[0])
-
-            for idx in range(length):
-
-                if i[idx] in text:
-                    i[idx] = text[i[idx]]
-                else:
-                    i[idx] = text["<UNK_WORD>"]
-
-        return input_data
-    
 
     def generate_batch(self,start,limit):
         end = start + limit
