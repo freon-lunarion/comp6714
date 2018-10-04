@@ -23,10 +23,18 @@ HIDDEN_DIM = 4
 #     "georgia tech is a university in georgia".split(),
 #     "B I O O O O B".split()
 # )]
+<<<<<<< HEAD
+path = "data/word_embeddings.txt"
+train = Preprocessor("data/train.txt")
+embed_data = train.embed_input()
+batch_data = train.generate_batch(0,2)
+
+=======
 
 train = Preprocessor("data/train.txt","data/word_embeddings.txt")
 # embed_data = train.embed_input("data/word_embeddings.txt")
 train.generate_batch(0,2)
+>>>>>>> 38984aaf1eeacbba59b76e6dbca9065f24f9d040
 
 word_to_ix = {}
 for sentence, tags in train.batch:
@@ -37,12 +45,12 @@ for sentence, tags in train.batch:
 tag_to_ix = {"B-TAR": 0, "B-HYP": 1,"I-TAR": 2,"I-HYP": 3, "O": 4}
 
 #Checking the result
-#print("This is train result = \n", train.batch)
-#print("\n\n\nThis is word to ix = \n", word_to_ix)
+print("This is word_to_ix = \n", word_to_ix)
+print("\n\n\nThis is prepare_sequence = \n", prepare_sequence(sentence, word_to_ix))
 
 #model = BiLSTM_CRF(len(word_to_ix), tag_to_ix, EMBEDDING_DIM, HIDDEN_DIM)
-
-model = BiLSTM(hidden_size = , num_layers = 1, dropout = 0.5, batch_first = True)
+"""
+model = BiLSTM(hidden_size = HIDDEN_DIM, num_layers = 1, dropout = 0.5, batch_first = True)
 optimizer = optim.SGD(model.parameters(), lr=0.01, weight_decay=1e-4)
 
 # Check predictions before training
@@ -61,8 +69,8 @@ for epoch in range(
 
         # Step 2. Get our inputs ready for the network, that is,
         # turn them into Tensors of word indices.
-        sentence_in = prepare_sequence(sentence, word_to_ix)
-        targets = torch.tensor([tag_to_ix[t] for t in tags], dtype=torch.long)
+        #sentence_in = prepare_sequence(sentence, word_to_ix)
+        #targets = torch.tensor([tag_to_ix[t] for t in tags], dtype=torch.long)
 
         # Step 3. Run our forward pass.
         loss = model.neg_log_likelihood(sentence_in, targets)
@@ -71,7 +79,7 @@ for epoch in range(
         # calling optimizer.step()
         loss.backward()
         optimizer.step()
-"""
+
 # Check predictions after training
 with torch.no_grad():
     precheck_sent = prepare_sequence(train.batch[0][0], word_to_ix)
