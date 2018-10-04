@@ -23,14 +23,21 @@ HIDDEN_DIM = 4
 #     "georgia tech is a university in georgia".split(),
 #     "B I O O O O B".split()
 # )]
+<<<<<<< HEAD
 path = "data/word_embeddings.txt"
 train = Preprocessor("data/train.txt")
 embed_data = train.embed_input()
 batch_data = train.generate_batch(0,2)
 
+=======
+
+train = Preprocessor("data/train.txt","data/word_embeddings.txt")
+# embed_data = train.embed_input("data/word_embeddings.txt")
+train.generate_batch(0,2)
+>>>>>>> 38984aaf1eeacbba59b76e6dbca9065f24f9d040
 
 word_to_ix = {}
-for sentence, tags in batch_data:
+for sentence, tags in train.batch:
     for word in sentence:
         if word not in word_to_ix:
             word_to_ix[word] = len(word_to_ix)

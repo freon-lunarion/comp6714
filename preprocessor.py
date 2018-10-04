@@ -1,12 +1,18 @@
 
 class Preprocessor():
 
-    def __init__(self, filename):
+    def __init__(self, filename, embedd_path):
         self.sentences = []
+        self.word_embed = []
         ls_word = []
         ls_tags = []
+
+        fl = open(embedd_path,"r", encoding = "utf8")
+        for line in fl:
+            words = line.split()
+            self.word_embed.append(words[0])
+
         fl = open(filename,"r", encoding = "utf8")
-        
         for line in fl:
             words = line.split()
             if (not words):
@@ -14,8 +20,12 @@ class Preprocessor():
                 ls_word.clear()
                 ls_tags.clear()
                 continue
-            ls_word.append(words[0])
+            if (words[0] in self.word_embed):
+                ls_word.append(words[0])
+            else :
+                ls_word.append('<UNK_WORD>')
             ls_tags.append(words[1])
+<<<<<<< HEAD
     
 
     def embed_input():
@@ -44,6 +54,8 @@ class Preprocessor():
 
         return self.sentences
     
+=======
+>>>>>>> 38984aaf1eeacbba59b76e6dbca9065f24f9d040
 
     def generate_batch(self,start,limit):
         end = start + limit
