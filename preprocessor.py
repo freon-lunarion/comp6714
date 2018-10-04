@@ -20,10 +20,8 @@ class Preprocessor():
                 ls_word.clear()
                 ls_tags.clear()
                 continue
-            if (words[0] in self.word_embed):
-                ls_word.append(words[0])
-            else :
-                ls_word.append('<UNK_WORD>')
+            
+            ls_word.append(words[0])
             ls_tags.append(words[1])
 
     def generate_batch(self,start,limit):
@@ -42,8 +40,6 @@ class Preprocessor():
                 item[1].append('O')
 
         return self.batch
-    
-
 
     def num_sentence(self):
         return len(self.sentences)
