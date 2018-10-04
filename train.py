@@ -3,10 +3,11 @@ import torch.autograd as autograd
 import torch.nn as nn
 import torch.optim as optim
 
-from BilSTRM_CRF import BiLSTM_CRF
+#from BilSTRM_CRF import BiLSTM_CRF
 from helper import *
 
 from preprocessor import Preprocessor
+from BiLSTM import BiLSTM
 
 torch.manual_seed(1)
 
@@ -39,8 +40,9 @@ tag_to_ix = {"B-TAR": 0, "B-HYP": 1,"I-TAR": 2,"I-HYP": 3, "O": 4}
 #print("This is train result = \n", train.batch)
 #print("\n\n\nThis is word to ix = \n", word_to_ix)
 
-"""
-model = BiLSTM_CRF(len(word_to_ix), tag_to_ix, EMBEDDING_DIM, HIDDEN_DIM)
+#model = BiLSTM_CRF(len(word_to_ix), tag_to_ix, EMBEDDING_DIM, HIDDEN_DIM)
+
+model = BiLSTM(hidden_size = , num_layers = 1, dropout = 0.5, batch_first = True)
 optimizer = optim.SGD(model.parameters(), lr=0.01, weight_decay=1e-4)
 
 # Check predictions before training
@@ -69,7 +71,7 @@ for epoch in range(
         # calling optimizer.step()
         loss.backward()
         optimizer.step()
-
+"""
 # Check predictions after training
 with torch.no_grad():
     precheck_sent = prepare_sequence(train.batch[0][0], word_to_ix)

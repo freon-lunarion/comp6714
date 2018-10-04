@@ -14,30 +14,7 @@ class BiLSTM(nn.Module):
 		self.dropout = dropout 
 		self.batch_first = batch_first
 
-	def embed_input(input_data, embedd_path):
-		
-		#change input_data into list of embedd
-		#this is the path supposed to be = "data/word_embeddings.txt"
-		with open(embedd_path, "r", encoding = "utf-8") as file:
-			text = dict()
-
-			for i in file:
-				temp = i.split()
-				text[temp[0]] = list(map(float,temp[1:]))
-
-		#input_data in forms of = [[list of words, list of tags]. [list of words, list of tags], ... ], type list(list(list(), list()))
-		for i in input_data:
-			
-			length = len(i[0])
-
-			for idx in range(length):
-
-				if i[idx] in text:
-					i[idx] = text[i[idx]]
-				else:
-					i[idx] = text["<UNK_WORD>"]
-
-		return input_data
+	
 		
 	def forward(input_data):
 		#Parameters Explanation
@@ -52,7 +29,7 @@ class BiLSTM(nn.Module):
 		co = torch.randn(self.num_layers * 2, input_data, self.hidden_size)
 
 		#input_data shape should be the same as (seq_len, batch, input_size)
-		output, (hn,cn) = rnn(self.emb_input, (ho, co))
+		output, (hn,cn) = rnn(input_data, (ho, co))
 
 		#softmax
 		softmax = nn.Softmax()
