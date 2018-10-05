@@ -7,7 +7,7 @@ import torch.optim as optim
 class BiLSTM(nn.Module):
 
 	def __init__(self, hidden_size, num_layers, dropout = 0, batch_first = False):
-		super(BiLSTM,self).init()
+		super(BiLSTM,self).__init__()
 		#self.input_size = input_size
 		self.hidden_size = hidden_size
 		self.num_layers = num_layers
@@ -16,20 +16,25 @@ class BiLSTM(nn.Module):
 
 	
 		
-	def forward(input_data):
+	def forward(self, input_data):
 		#Parameters Explanation
 		#num_layers = number of stacked LSTM cell
 		#input_size = the size of expected input features (number of words in sentences)
 		#hidden_size = the size of features expected in hidden state (output class)
-		rnn = nn.LSTM(input_size = self.input_size, hidden_size = self.hidden_size, num_layers = self.num_layers, dropout = self.dropout, bidirectional = True)
+		max_length = len(input_data)
+
+		rnn = nn.LSTM(input_size = max_length, hidden_size = self.hidden_size, num_layers = self.num_layers, dropout = self.dropout, bidirectional = True)
 
 		#h_0 of shape (num_layers * num_directions, batch, hidden_size): tensor containing the initial hidden state for each element in the batch.
 		#c_0 of shape (num_layers * num_directions, batch, hidden_size): tensor containing the initial cell state for each element in the batch.
-		ho = torch.randn(self.num_layers * 2, input_data, self.hidden_size) 
-		co = torch.randn(self.num_layers * 2, input_data, self.hidden_size)
+		ho = torch.randn(self.num_layers * 2, max_length, self.hidden_size) 
+		co = torch.randn(self.num_layers * 2, max_length, self.hidden_size)
 
+		print("This is the size = ", input_data.view(len(input_data), 1, -1).size())
+		print("This is the size of input = ", input_data.size())
+		print("This is the supposed shape = ", (max_length, 2, max_length))
 		#input_data shape should be the same as (seq_len, batch, input_size)
-		output, (hn,cn) = rnn(input_data, (ho, co))
+		output, (hn,cn) = rnn(input_data.view(len(input_data), 1, -1), (ho, co))
 
 		#softmax
 		softmax = nn.Softmax()
