@@ -6,7 +6,7 @@ class Preprocessor():
     embed_val = list()
     word_to_ix = {}
 
-    def __init__(self, filename, embedd_path="data/word_embeddings.txt"):
+    def __init__(self, filename, embedd_path):
         
         ls_word = []
         ls_tags = []
@@ -61,6 +61,7 @@ class Preprocessor():
     
 
     def generate_batch(self,start=0,limit=1):
+        #limit = size per batch
         end = start + limit
         batch = self.sentences[start:end].copy() 
         max_length = 0

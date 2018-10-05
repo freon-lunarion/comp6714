@@ -23,18 +23,8 @@ HIDDEN_DIM = 4
 #     "georgia tech is a university in georgia".split(),
 #     "B I O O O O B".split()
 # )]
-<<<<<<< HEAD
-path = "data/word_embeddings.txt"
-train = Preprocessor("data/train.txt")
-embed_data = train.embed_input()
-batch_data = train.generate_batch(0,2)
-
-=======
 
 train = Preprocessor("data/train.txt","data/word_embeddings.txt")
-# embed_data = train.embed_input("data/word_embeddings.txt")
-train.generate_batch(0,2)
->>>>>>> 38984aaf1eeacbba59b76e6dbca9065f24f9d040
 
 word_to_ix = {}
 for sentence, tags in train.batch:
@@ -45,10 +35,37 @@ for sentence, tags in train.batch:
 tag_to_ix = {"B-TAR": 0, "B-HYP": 1,"I-TAR": 2,"I-HYP": 3, "O": 4}
 
 #Checking the result
-print("This is word_to_ix = \n", word_to_ix)
-print("\n\n\nThis is prepare_sequence = \n", prepare_sequence(sentence, word_to_ix))
+#print("This is word_to_ix = \n", word_to_ix)
+#print("\n\n\nThis is prepare_sequence = \n", prepare_sequence(sentence, word_to_ix))
 
-#model = BiLSTM_CRF(len(word_to_ix), tag_to_ix, EMBEDDING_DIM, HIDDEN_DIM)
+#Check Generate Batch
+start = 0
+BATCH_SIZE = 2
+
+batch_data = train.generate_batch(start, BATCH_SIZE)
+print(batch_data)
+print("Separating x and y..")
+
+sentence = batch_data[0][0]
+tags = batch_data[0][1]
+
+new_data = torch.tensor(sentence)
+newtags = prepare_sequence(tags, tag_to_ix)
+new_y = torch.tensor(newtags)
+
+print("\nnew_data = \n", new_data)
+print("\nLength of new_data = ", len(new_data))
+print("\nCreating Model....\n")
+model = BiLSTM(5, 1, batch_first = True) # Parameters = hidden_size, num_layers, dropout, batch_first
+print("\nFeeding batch_data..\n")
+print("Size of new_data = ", new_data.size())
+result = model(new_data)
+print("\n\nThis is the result = \n", result)
+
+
+
+#batch_data = list(list(list(embed)), list(tag))
+
 """
 model = BiLSTM(hidden_size = HIDDEN_DIM, num_layers = 1, dropout = 0.5, batch_first = True)
 optimizer = optim.SGD(model.parameters(), lr=0.01, weight_decay=1e-4)

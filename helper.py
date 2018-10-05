@@ -6,7 +6,7 @@ def argmax(vec):
     return idx.item()
 
 
-def prepare_sequence(seq, to_ix):
+def prepare_sequence(seq, to_ix): #use prepare sequence because tensor can't be of datatype 'str'
     idxs = [to_ix[w] for w in seq]
     return torch.tensor(idxs, dtype=torch.long)
 
