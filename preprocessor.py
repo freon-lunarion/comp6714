@@ -32,7 +32,7 @@ class Preprocessor():
             ls_tags.append(words[1])
     
 
-    def embed_input():
+    def embed_input(word_seq):
         
         #change input_data into list of embedd
         #this is the path supposed to be = "data/word_embeddings.txt"
@@ -45,7 +45,8 @@ class Preprocessor():
         #         text[temp[0]] = list(map(float,temp[1:]))
 
         #input_data in forms of = [[list of words, list of tags]. [list of words, list of tags], ... ], type list(list(list(), list()))
-        for i in self.sentences:
+        seq = word_seq
+        for i in seq:
             
             length = len(i[0])
 
@@ -56,7 +57,7 @@ class Preprocessor():
                 else:
                     i[0][idx] = text["<UNK_WORD>"]
 
-        return self.sentences
+        return seq
     
 
     def generate_batch(self,start=0,limit=1):
