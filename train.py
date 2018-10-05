@@ -44,19 +44,29 @@ BATCH_SIZE = 2
 
 batch_data = train.generate_batch(start, BATCH_SIZE)
 print(batch_data)
+print("This is size of batch_data = ", len(batch_data))
 print("Separating x and y..")
 
-sentence = batch_data[0][0]
-tags = batch_data[0][1]
+sen_list = list()
+tag_list = list()
 
-new_data = torch.tensor(sentence)
-newtags = prepare_sequence(tags, tag_to_ix)
-new_y = torch.tensor(newtags)
+for i, x in batch_data:
+    sen_list.append(i)
+    temp_tag = prepare_seq(x, tag_to_ix)
+    tag_list.append(temp_tag)
 
+
+print("\nThis is tag_list = ", tag_list)
+new_data = torch.tensor(sen_list)
+new_y = torch.tensor(tag_list)
+
+print("\nThis is new tag = ", new_y)
 print("\nnew_data = \n", new_data)
 print("\nLength of new_data = ", len(new_data))
 print("\nCreating Model....\n")
+
 model = BiLSTM(5, 1, batch_first = True) # Parameters = hidden_size, num_layers, dropout, batch_first
+
 print("\nFeeding batch_data..\n")
 print("Size of new_data = ", new_data.size())
 result = model(new_data)

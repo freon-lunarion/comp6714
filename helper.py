@@ -10,6 +10,10 @@ def prepare_sequence(seq, to_ix): #use prepare sequence because tensor can't be 
     idxs = [to_ix[w] for w in seq]
     return torch.tensor(idxs, dtype=torch.long)
 
+def prepare_seq(seq, to_ix):
+	idxs = [to_ix[w] for w in seq]
+	return idxs
+
 
 # Compute log sum exp in a numerically stable way for the forward algorithm
 def log_sum_exp(vec):
