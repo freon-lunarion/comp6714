@@ -38,9 +38,9 @@ tag_to_ix = {"B-TAR": 0, "B-HYP": 1,"I-TAR": 2,"I-HYP": 3, "O": 4}
 #print("This is word_to_ix = \n", word_to_ix)
 #print("\n\n\nThis is prepare_sequence = \n", prepare_sequence(sentence, word_to_ix))
 
-#Check Generate Batch
-start = 0
-BATCH_SIZE = 3
+# ------------------------------   Check Generate Batch   --------------------------------------
+"""start = 0
+BATCH_SIZE = 2
 
 batch_data = train.generate_batch(start, BATCH_SIZE)
 print(batch_data)
@@ -67,7 +67,57 @@ print("\nThis is embedding dim truly = ", len(sen_list[0][0]))
 print("\nThis is new_data = ", new_data)
 print("\nThis is new_data.size = ", new_data.size())
 result = model(new_data)
-print("\n\nThis is the result = \n", result)
+print("\n\nThis is the result = \n", result)"""
+
+
+# ----------------------------   THE REAL TRAINING LOOP   --------------------------------------
+
+lstm_model = BiLSTM(hidden_size = 10, num_layers = 1, batch_first = True)
+loss_func = nn.NLLLoss()
+optimizer = optim.Adam(lstm_model.parameters(), lr = 0.0001, weight_decay = 0)
+
+ITERATION = 100
+BATCH_SIZE = 2
+
+for nb in range(ITERATION):
+
+    # Restart the batch in this loop
+
+    start = 0
+
+    for i in range(train.num_sentence()//BATCH_SIZE): # Calculate how many batches are there
+
+        # Generate batch in this loop
+        
+        # Generate batch training data
+        batch_train_data = train.generate_batch(start, BATCH_SIZE)
+
+        # Separating x and y
+        sen_list = list()
+        tag_list = list()
+
+        for i, x in batch_data:
+            sen_list.append(i)
+            temp_tag = prepare_seq(x, tag_to_ix)
+            tag_list.append(temp_tag)
+
+        new_data = torch.tensor(sen_list)
+        new_y = torch.tensor(tag_list)
+
+        # ----- TRAINING -----
+
+        lstm_model.zero_grad() # PyTorch accumulates gradients, so we need to clear them out before each instances
+        lstm_model.start_hidden() # Generate a random number for hidden_state
+
+        # -Forward pass
+        result = lstm_model(new_data)
+        loss = loss_func(result, new_y) #Comparing result with new_y # result need to be adjusted
+        loss.backward()
+        optimizer.step()
+
+
+
+
 
 
 
