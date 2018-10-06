@@ -40,7 +40,7 @@ tag_to_ix = {"B-TAR": 0, "B-HYP": 1,"I-TAR": 2,"I-HYP": 3, "O": 4}
 
 #Check Generate Batch
 start = 0
-BATCH_SIZE = 2
+BATCH_SIZE = 3
 
 batch_data = train.generate_batch(start, BATCH_SIZE)
 print(batch_data)

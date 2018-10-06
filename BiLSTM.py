@@ -28,31 +28,34 @@ class BiLSTM(nn.Module):
 
 		#h_0 of shape (num_layers * num_directions, batch, hidden_size): tensor containing the initial hidden state for each element in the batch.
 		#c_0 of shape (num_layers * num_directions, batch, hidden_size): tensor containing the initial cell state for each element in the batch.
-		ho = torch.randn(self.num_layers * 2, 2, self.hidden_size) 
-		co = torch.randn(self.num_layers * 2, 2, self.hidden_size)
+		ho = torch.randn(self.num_layers * 2, 3, self.hidden_size) 
+		co = torch.randn(self.num_layers * 2, 3, self.hidden_size)
 
 		print("\nThis is emb_dim = ", emb_dim)
 		print("This is input_data.size() = ", input_data.size())
 		print("This is input_data.view.size() = ", input_data.view(len(input_data[0]), max_length, -1).size())
 		print("This is input_data.view.size(-1) = ", input_data.view(len(input_data[0]), max_length, -1).size(-1))
-		print("This is (seqlen, batch_size, emb_dim) = ", (len(input_data[0]), 2, emb_dim))
+		print("This is (seqlen, batch_size, emb_dim) = ", (len(input_data[0]), 3, emb_dim))
 		#input_data shape should be the same as (seq_len, batch, input_size)
 		output, (hn,cn) = rnn(input_data.view(len(input_data[0]), max_length , -1), (ho, co))
+		#this is the output dimension = (seq_len, batch_size, Hidden_dim * 2 (if bidirectional))
 
 		#softmax
-		softmax = nn.Softmax(dim = 2)
+		softmax = nn.Softmax(dim = 2) #dim parameters means which dimension that softmax will be applied to 
 
 		print("\nThis is the output = ", output)
 		print("\n\nThis is the size of the output = ", output.size())
 		print("\n\n")
 
 		output2 = softmax(output)
+		#this is the output2 dimension = same as output dimension
 
 		print("\nThis is the output2 = ", output2)
 		print("\nThis is the size of output2 = ", output2.size())
 
 		#max from softmax
-		outind = torch.argmax(output2, dim = 2)
+		outind = torch.argmax(output2, dim = 2) # dim parameters means which dimension that argmax will be applied to 
+		#this is the outind dimension = (seq_len, batch_size) *NOTE = it's basically reduce the dim in the arguments
 
 		print("\nThis is the outind = ", outind)
 		print("\nThis is the size of outind = ", outind.size())
