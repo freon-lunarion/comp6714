@@ -22,9 +22,7 @@ class BiLSTM(nn.Module):
 		#input_size = the size of expected input features (embedding dimension)
 		#hidden_size = the size of features expected in hidden state (output class)
 		max_length = len(input_data)
-		print("\nThis is max_length = ", max_length)
-		emb_dim = list(input_data.size())[1]
-		print("\nThis is emb_dim = ", emb_dim)
+		emb_dim = list(input_data.size())[-1]
 
 		rnn = nn.LSTM(input_size = emb_dim, hidden_size = self.hidden_size, num_layers = self.num_layers, dropout = self.dropout, bidirectional = True)
 
@@ -33,17 +31,31 @@ class BiLSTM(nn.Module):
 		ho = torch.randn(self.num_layers * 2, 2, self.hidden_size) 
 		co = torch.randn(self.num_layers * 2, 2, self.hidden_size)
 
-		print("This is the size = ", input_data.view(len(input_data[0]), max_length , -1).size())
-		print("This is the size of input = ", input_data.size())
+		print("\nThis is emb_dim = ", emb_dim)
+		print("This is input_data.size() = ", input_data.size())
+		print("This is input_data.view.size() = ", input_data.view(len(input_data[0]), max_length, -1).size())
+		print("This is input_data.view.size(-1) = ", input_data.view(len(input_data[0]), max_length, -1).size(-1))
+		print("This is (seqlen, batch_size, emb_dim) = ", (len(input_data[0]), 2, emb_dim))
 		#input_data shape should be the same as (seq_len, batch, input_size)
 		output, (hn,cn) = rnn(input_data.view(len(input_data[0]), max_length , -1), (ho, co))
 
 		#softmax
-		softmax = nn.Softmax()
+		softmax = nn.Softmax(dim = 2)
+
+		print("\nThis is the output = ", output)
+		print("\n\nThis is the size of the output = ", output.size())
+		print("\n\n")
+
 		output2 = softmax(output)
+
+		print("\nThis is the output2 = ", output2)
+		print("\nThis is the size of output2 = ", output2.size())
 
 		#max from softmax
 		outind = torch.argmax(output2, dim = 2)
+
+		print("\nThis is the outind = ", outind)
+		print("\nThis is the size of outind = ", outind.size())
 
 		return outind
 

@@ -44,7 +44,6 @@ BATCH_SIZE = 2
 
 batch_data = train.generate_batch(start, BATCH_SIZE)
 print(batch_data)
-print("This is size of batch_data = ", len(batch_data))
 print("Separating x and y..")
 
 sen_list = list()
@@ -56,19 +55,17 @@ for i, x in batch_data:
     tag_list.append(temp_tag)
 
 
-print("\nThis is tag_list = ", tag_list)
 new_data = torch.tensor(sen_list)
 new_y = torch.tensor(tag_list)
 
-print("\nThis is new tag = ", new_y)
-print("\nnew_data = \n", new_data)
-print("\nLength of new_data = ", len(new_data))
 print("\nCreating Model....\n")
 
-model = BiLSTM(5, 1, batch_first = True) # Parameters = hidden_size, num_layers, dropout, batch_first
+model = BiLSTM(10, 1, batch_first = True) # Parameters = hidden_size, num_layers, dropout, batch_first
 
 print("\nFeeding batch_data..\n")
-print("Size of new_data = ", new_data.size())
+print("\nThis is embedding dim truly = ", len(sen_list[0][0]))
+print("\nThis is new_data = ", new_data)
+print("\nThis is new_data.size = ", new_data.size())
 result = model(new_data)
 print("\n\nThis is the result = \n", result)
 
