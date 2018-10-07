@@ -2,6 +2,7 @@ import torch
 import torch.autograd as autograd
 import torch.nn as nn
 import torch.optim as optim
+import sys
 
 #from BilSTRM_CRF import BiLSTM_CRF
 from helper import *
@@ -74,6 +75,7 @@ print("\n\nThis is the result = \n", result)"""
 
 lstm_model = BiLSTM(hidden_size = 10, num_layers = 1, batch_first = True)
 loss_func = nn.NLLLoss()
+print("This is the parameter = ", list(lstm_model.parameters()))
 optimizer = optim.Adam(lstm_model.parameters(), lr = 0.0001, weight_decay = 0)
 
 ITERATION = 100
