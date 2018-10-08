@@ -6,7 +6,7 @@ import torch.optim as optim
 
 class BiLSTM(nn.Module):
 
-	def __init__(self, hidden_size, num_layers, dropout = 0, batch_first = False):
+	def __init__(self, emb_dim, hidden_size, num_layers, batch_size, dropout = 0, batch_first = False):
 		super(BiLSTM,self).__init__()
 		#self.input_size = input_size
 		self.hidden_size = hidden_size
@@ -14,6 +14,10 @@ class BiLSTM(nn.Module):
 		self.dropout = dropout 
 		self.batch_first = batch_first
 		self.hidden_state = None
+		self.emb_dim = emb_dim
+		self.batch_size = batch_size
+		self.rnn = nn.LSTM(input_size = self.emb_dim, hidden_size = self.hidden_size, num_layers = self.num_layers, dropout = self.dropout, bidirectional = True)
+
 	
 		
 	def forward(self, input_data):
@@ -23,20 +27,14 @@ class BiLSTM(nn.Module):
 		#hidden_size = the size of features expected in hidden state (output class) (the number of neurons in hidden layer in each of lstm cell)
 		max_length = len(input_data)
 		input_data_size = list(input_data.size())
-		emb_dim = input_data_size[-1]
-		batch_size = input_data_size[0]
 
-		rnn = nn.LSTM(input_size = emb_dim, hidden_size = self.hidden_size, num_layers = self.num_layers, dropout = self.dropout, bidirectional = True)
-
-
-
-		print("\nThis is emb_dim = ", emb_dim)
+		print("\nThis is emb_dim = ", self.emb_dim)
 		print("This is input_data.size() = ", input_data.size())
 		print("This is input_data.view.size() = ", input_data.view(len(input_data[0]), max_length, -1).size())
 		print("This is input_data.view.size(-1) = ", input_data.view(len(input_data[0]), max_length, -1).size(-1))
-		print("This is (seqlen, batch_size, emb_dim) = ", (len(input_data[0]), batch_size, emb_dim))
+		print("This is (seqlen, batch_size, emb_dim) = ", (len(input_data[0]), self.batch_size, self.emb_dim))
 		#input_data shape should be the same as (seq_len, batch, input_size)
-		output, self.hidden_state = rnn(input_data.view(len(input_data[0]), max_length , -1), self.hidden_state)
+		output, self.hidden_state = self.rnn(input_data.view(len(input_data[0]), max_length , -1), self.hidden_state)
 		#this is the output dimension = (seq_len, batch_size, Hidden_dim * 2 (if bidirectional))
 
 		#softmax
@@ -66,8 +64,8 @@ class BiLSTM(nn.Module):
 
 		#h_0 of shape (num_layers * num_directions, batch, hidden_size): tensor containing the initial hidden state for each element in the batch.
 		#c_0 of shape (num_layers * num_directions, batch, hidden_size): tensor containing the initial cell state for each element in the batch.
-		ho = torch.randn(self.num_layers * 2, batch_size, self.hidden_size)
-		co = torch.randn(self.num_layers * 2, batch_size, self.hidden_size)
+		ho = torch.randn(self.num_layers * 2, self.batch_size, self.hidden_size)
+		co = torch.randn(self.num_layers * 2, self.batch_size, self.hidden_size)
 		self.hidden_state = (ho,co)
 
 #Training the model

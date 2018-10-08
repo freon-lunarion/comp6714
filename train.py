@@ -13,8 +13,10 @@ from BiLSTM import BiLSTM
 torch.manual_seed(1)
 
 
-EMBEDDING_DIM = 5
+EMBEDDING_DIM = 50
 HIDDEN_DIM = 4
+ITERATION = 100
+BATCH_SIZE = 2
 
 # Make up some training data
 # training_data = [(
@@ -73,13 +75,10 @@ print("\n\nThis is the result = \n", result)"""
 
 # ----------------------------   THE REAL TRAINING LOOP   --------------------------------------
 
-lstm_model = BiLSTM(hidden_size = 10, num_layers = 1, batch_first = True)
+lstm_model = BiLSTM(emb_dim = EMBEDDING_DIM, hidden_size = 10, num_layers = 1, batch_size = BATCH_SIZE, batch_first = True)
 loss_func = nn.NLLLoss()
-print("This is the parameter = ", list(lstm_model.parameters()))
-optimizer = optim.Adam(lstm_model.parameters(), lr = 0.0001, weight_decay = 0)
-
-ITERATION = 100
-BATCH_SIZE = 2
+#print("This is the parameter = ", list(lstm_model.parameters()))
+optimizer = optim.Adam(list(lstm_model.parameters()), lr = 0.0001, weight_decay = 0)
 
 for nb in range(ITERATION):
 
@@ -98,7 +97,7 @@ for nb in range(ITERATION):
         sen_list = list()
         tag_list = list()
 
-        for i, x in batch_data:
+        for i, x in batch_train_data:
             sen_list.append(i)
             temp_tag = prepare_seq(x, tag_to_ix)
             tag_list.append(temp_tag)
